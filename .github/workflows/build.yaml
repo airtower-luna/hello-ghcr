@@ -8,7 +8,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Build container image
-        run: docker build --iidfile meow.id .
+        run: >
+          docker build
+          --label org.opencontainers.image.revision=${{ github.sha }}
+          --iidfile meow.id .
       - name: Test container image
         run: test "$(docker run --rm $(cat meow.id))" = "Meow! =^.^="
       - name: Tag container image
