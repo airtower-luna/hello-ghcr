@@ -22,4 +22,18 @@ jobs:
         run: >
           docker image inspect
           ghcr.io/${{ github.repository_owner }}/hello-ghcr-meow:beta
-      # No push yet, trying things out first!
+      - name: Docker login
+        env:
+          GHCR_TOKEN: ${{ secrets.GHCR_TOKEN }}
+        run: >
+          echo ${GHCR_TOKEN} |
+          docker login ghcr.io -u ${{ github.repository_owner }}
+          --password-stdin
+      - name: Push the container image
+        run: >
+          docker push
+          ghcr.io/${{ github.repository_owner }}/hello-ghcr-meow:beta
+      - name: Docker logout
+        if: always()
+        run: |
+          docker logout ghcr.io
