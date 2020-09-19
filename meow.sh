@@ -1,4 +1,6 @@
 #!/bin/sh
+
+# check if there's an integer parameter
 if echo "${1}" | egrep -q '^[0-9]+$'; then
     m="${1}"
 else
