@@ -30,7 +30,8 @@ import sys
 # The keys in tag_patterns are matched against the first command line
 # parameter, which should be a git ref. If there is a match, the
 # matching value and all non-empty capturing groups (if any) are used
-# as tags. If multiple patterns match all resulting tags are used.
+# as tags. If multiple patterns match all resulting tags are used. If
+# no pattern matches the output will be empty.
 
 tag_patterns = {
     re.compile(r'^refs/heads/main$'): 'beta',
