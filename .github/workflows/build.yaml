@@ -19,16 +19,17 @@ jobs:
       - name: Show image information
         run: |
           docker image inspect $(cat meow.id)
-      - name: Generate container tag(s)
+      - name: Generate container tag(s) and name
         run: |
           TAGS=$(python3 tag-from-ref.py ${{ github.ref }})
           echo "::set-env name=TAGS::${TAGS}"
+          echo "::set-env name=CONTAINER_NAME::${{ github.repository_owner }}/hello-ghcr-meow"
       - name: Tag container image
         if: ${{ env.TAGS }}
         run: |
           id=$(cat meow.id)
           for t in ${TAGS}; do
-              docker tag ${id} ghcr.io/${{ github.repository_owner }}/hello-ghcr-meow:${t}
+              docker tag ${id} ghcr.io/${CONTAINER_NAME}:${t}
           done
       - name: Docker login
         if: ${{ env.TAGS }}
@@ -42,7 +43,7 @@ jobs:
         if: ${{ env.TAGS }}
         run: |
           for t in ${TAGS}; do
-              docker push ghcr.io/${{ github.repository_owner }}/hello-ghcr-meow:${t}
+              docker push ghcr.io/${CONTAINER_NAME}:${t}
           done
       - name: Docker logout
         if: always()
