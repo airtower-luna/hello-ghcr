@@ -32,6 +32,10 @@ import sys
 # matching value and all non-empty capturing groups (if any) are used
 # as tags. If multiple patterns match all resulting tags are used. If
 # no pattern matches the output will be empty.
+#
+# Note that the pattern below that matches git tag refs will always
+# tag the build as "latest" if it matches, you probably don't want
+# that if you maintain multiple stable releases (e.g. 1.x and 2.x).
 
 tag_patterns = {
     re.compile(r'^refs/heads/main$'): 'beta',
