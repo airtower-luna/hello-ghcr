@@ -22,8 +22,8 @@ jobs:
       - name: Generate container tag(s) and name
         run: |
           TAGS=$(python3 tag-from-ref.py ${{ github.ref }})
-          echo "::set-env name=TAGS::${TAGS}"
-          echo "::set-env name=CONTAINER_NAME::${{ github.repository_owner }}/hello-ghcr-meow"
+          echo "TAGS=${TAGS}" >> ${GITHUB_ENV}
+          echo "CONTAINER_NAME=${{ github.repository_owner }}/hello-ghcr-meow" >> ${GITHUB_ENV}
       - name: Tag container image
         if: ${{ env.TAGS }}
         run: |
