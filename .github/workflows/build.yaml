@@ -8,10 +8,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Build container image
-        run: >
-          docker build
-          --label org.opencontainers.image.revision=${{ github.sha }}
-          --iidfile meow.id .
+        run: |
+          docker build --label org.opencontainers.image.revision=${{ github.sha }} --iidfile meow.id .
           echo "MEOW_ID=$(cat meow.id)" >> ${GITHUB_ENV}
       - name: Test container image
         run: |
