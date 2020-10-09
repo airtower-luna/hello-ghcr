@@ -12,13 +12,14 @@ jobs:
           docker build
           --label org.opencontainers.image.revision=${{ github.sha }}
           --iidfile meow.id .
+          echo "MEOW_ID=$(cat meow.id)" >> ${GITHUB_ENV}
       - name: Test container image
         run: |
-          test "$(docker run --rm $(cat meow.id))" = "Meow! =^.^="
-          test "$(docker run --rm $(cat meow.id) 2)" = "Meow! Meow! =^.^="
+          test "$(docker run --rm ${MEOW_ID})" = "Meow! =^.^="
+          test "$(docker run --rm ${MEOW_ID} 2)" = "Meow! Meow! =^.^="
       - name: Show image information
         run: |
-          docker image inspect $(cat meow.id)
+          docker image inspect ${MEOW_ID}
       - name: Generate container tag(s) and name
         run: |
           TAGS=$(python3 tag-from-ref.py ${{ github.ref }})
@@ -27,9 +28,8 @@ jobs:
       - name: Tag container image
         if: ${{ env.TAGS }}
         run: |
-          id=$(cat meow.id)
           for t in ${TAGS}; do
-              docker tag ${id} ghcr.io/${CONTAINER_NAME}:${t}
+              docker tag ${MEOW_ID} ghcr.io/${CONTAINER_NAME}:${t}
           done
       - name: Docker login
         if: ${{ env.TAGS }}
