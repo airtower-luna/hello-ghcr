@@ -18,6 +18,17 @@ jobs:
       - name: Show image information
         run: |
           docker image inspect ${MEOW_ID}
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@0.0.8
+        with:
+          image-ref: '${{ env.MEOW_ID }}'
+          format: 'template'
+          template: '@/contrib/sarif.tpl'
+          output: 'trivy-results.sarif'
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v1
+        with:
+          sarif_file: 'trivy-results.sarif'
       - name: Generate container tag(s) and name
         run: |
           TAGS=$(python3 tag-from-ref.py ${{ github.ref }})
