@@ -31,6 +31,12 @@ jobs:
               docker tag ${MEOW_ID} ${full_tag}
           done
           echo "SCAN_REF=${full_tag}" >> ${GITHUB_ENV}
+      - name: Tag container image with temporary tag
+        if: ${{ ! env.TAGS }}
+        run: |
+          full_tag=ghcr.io/${CONTAINER_NAME}:${{ github.sha }}
+          docker tag ${MEOW_ID} ${full_tag}
+          echo "SCAN_REF=${full_tag}" >> ${GITHUB_ENV}
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@0.0.8
         with:
