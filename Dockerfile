@@ -1,4 +1,4 @@
-FROM alpine:latest
+FROM docker.io/library/alpine:3.12.3
 
 LABEL org.opencontainers.image.source="https://github.com/airtower-luna/hello-ghcr" \
       org.opencontainers.image.title="Container says Meow!" \
