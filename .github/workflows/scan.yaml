@@ -1,0 +1,44 @@
+name: Scan images
+on:
+  push:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        label:
+          - 'latest'
+          - 'beta'
+    name: ${{ matrix.label }}
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Docker login
+        if: ${{ env.TAGS }}
+        env:
+          GHCR_TOKEN: ${{ secrets.GHCR_TOKEN }}
+        run: >
+          echo ${GHCR_TOKEN} |
+          docker login ghcr.io -u ${{ github.repository_owner }}
+          --password-stdin
+      - name: Define image name
+        run: |
+          echo "IMAGE=ghcr.io/${{ github.repository_owner }}/hello-ghcr-meow:${{ matrix.label }}" >>${GITHUB_ENV}
+      - name: Get container image
+        run: |
+          docker pull ${IMAGE}
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@0.0.8
+        with:
+          image-ref: '${{ env.IMAGE }}'
+          format: 'template'
+          template: '@/contrib/sarif.tpl'
+          output: 'trivy-results.sarif'
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v1
+        with:
+          sarif_file: 'trivy-results.sarif'
+      - name: Docker logout
+        if: always()
+        run: |
+          docker logout ghcr.io
