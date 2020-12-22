@@ -1,7 +1,7 @@
 name: Scan existing images
 on:
   schedule:
-    - cron: '55 20 * * *'
+    - cron: '10 21 * * *'
 
 jobs:
   build:
@@ -30,7 +30,7 @@ jobs:
           docker pull ${IMAGE}
       - name: Read image revision
         run: |
-          echo "IMAGE_REF=$(docker image inspect --format '{{ index .Config.Labels "org.opencontainers.image.revision" }}' ghcr.io/airtower-luna/hello-ghcr-meow:beta)" >>${GITHUB_ENV}
+          echo "IMAGE_REF=$(docker image inspect --format '{{ index .Config.Labels "org.opencontainers.image.revision" }}' ${IMAGE})" >>${GITHUB_ENV}
       - uses: actions/checkout@v2
         with:
           ref: ${{ env.IMAGE_REF }}
