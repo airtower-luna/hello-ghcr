@@ -1,7 +1,7 @@
 name: Scan existing images
 on:
   schedule:
-    - cron:  '5 20 * * *'
+    - cron: '55 20 * * *'
 
 jobs:
   build:
@@ -14,7 +14,6 @@ jobs:
     name: ${{ matrix.label }}
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v2
       - name: Docker login
         if: ${{ env.TAGS }}
         env:
@@ -29,6 +28,12 @@ jobs:
       - name: Get container image
         run: |
           docker pull ${IMAGE}
+      - name: Read image revision
+        run: |
+          echo "IMAGE_REF=$(docker image inspect --format '{{ index .Config.Labels "org.opencontainers.image.revision" }}' ghcr.io/airtower-luna/hello-ghcr-meow:beta)" >>${GITHUB_ENV}
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ env.IMAGE_REF }}
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@0.0.8
         with:
