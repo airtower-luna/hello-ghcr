@@ -21,3 +21,12 @@ scripts here are supposed to do:
 
 If you run the resulting image it'll meow at you, you can even give a
 number of meows on the command line! :smiley_cat:
+
+## Cleaning old images
+
+Building and pushing an image tagged `beta` for each commit
+accumulates old, now untagged beta images pretty quickly. The
+[`ghcr-prune.py`](./ghcr-prune.py) script uses the [GitHub packages
+API](https://docs.github.com/en/rest/reference/packages) to list image
+versions, and optionally prunes untagged ones older than a given
+number of days. :broom:
