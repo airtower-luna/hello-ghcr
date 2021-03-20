@@ -43,7 +43,7 @@ jobs:
           docker tag ${MEOW_ID} ${full_tag}
           echo "SCAN_REF=${full_tag}" >> ${GITHUB_ENV}
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@0.0.11
+        uses: aquasecurity/trivy-action@0.0.12
         with:
           image-ref: '${{ env.SCAN_REF }}'
           format: 'template'
