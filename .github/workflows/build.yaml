@@ -56,7 +56,7 @@ jobs:
       - name: Docker login
         if: ${{ env.TAGS }}
         env:
-          GHCR_TOKEN: ${{ secrets.GHCR_TOKEN }}
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: >
           echo ${GHCR_TOKEN} |
           docker login ghcr.io -u ${{ github.repository_owner }}
