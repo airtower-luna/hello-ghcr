@@ -4,6 +4,11 @@ on:
     - cron: '10 3 * * SAT'
   workflow_dispatch:
 
+permissions:
+  contents: read
+  packages: read
+  security-events: write
+
 jobs:
   build:
     strategy:
