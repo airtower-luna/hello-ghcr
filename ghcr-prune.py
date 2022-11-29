@@ -14,6 +14,8 @@ __license__ = "MIT"
 
 # GitHub API documentation: https://docs.github.com/en/rest/reference/packages
 github_api_accept = 'application/vnd.github.v3+json'
+# https://docs.github.com/en/rest/overview/api-versions?apiVersion=2022-11-28
+github_api_version = '2022-11-28'
 
 
 if __name__ == "__main__":
@@ -52,7 +54,8 @@ if __name__ == "__main__":
 
     s = requests.Session()
     s.headers.update({'Authorization': f'token {token}',
-                      'Accept': github_api_accept})
+                      'Accept': github_api_accept,
+                      'X-GitHub-Api-Version': github_api_version})
 
     r = s.get(f'https://api.github.com/user/packages/'
               f'container/{args.container}/versions')
