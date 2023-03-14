@@ -16,8 +16,7 @@ scripts here are supposed to do:
   runs regularly for the `beta` and `latest` tags in the
   [`scan_images.yaml`](.github/workflows/scan_images.yaml) workflow.
 
-* If the image should be tagged, do that and push to
-  GHCR. Authentication uses a PAT.
+* If the image should be tagged, do that and push to GHCR.
 
 If you run the resulting image it'll meow at you, you can even give a
 number of meows on the command line! :smiley_cat:
