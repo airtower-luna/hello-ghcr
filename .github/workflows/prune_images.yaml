@@ -1,0 +1,23 @@
+name: Prune untagged images
+on:
+  schedule:
+    - cron: '12 4 1-7 * SAT'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  prune:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Prune untagged images
+        env:
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python ghcr-prune.py --container hello-ghcr-meow --prune-age 15
