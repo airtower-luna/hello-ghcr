@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 # PYTHON_ARGCOMPLETE_OK
 import argparse
-import dateutil.parser
 import getpass
 import os
 import requests
@@ -72,7 +71,7 @@ if __name__ == "__main__":
         print(f'Pruning images created before {del_before}')
 
     for v in versions:
-        created = dateutil.parser.isoparse(v['created_at'])
+        created = datetime.fromisoformat(v['created_at'])
         metadata = v["metadata"]["container"]
         print(f'{v["id"]}\t{v["name"]}\t{created}\t{metadata["tags"]}')
 
