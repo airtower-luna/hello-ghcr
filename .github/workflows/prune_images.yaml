@@ -1,6 +1,5 @@
 name: Prune untagged images
 on:
-  push:
   schedule:
     - cron: '12 4 1-7 * SAT'
   workflow_dispatch:
@@ -26,4 +25,4 @@ jobs:
         env:
           GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          python ghcr-prune.py -n --container hello-ghcr-meow --prune-age 15
+          python ghcr-prune.py --container hello-ghcr-meow --prune-age 15
