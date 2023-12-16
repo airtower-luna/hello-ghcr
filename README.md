@@ -29,3 +29,6 @@ accumulates old, now untagged beta images pretty quickly. The
 API](https://docs.github.com/en/rest/reference/packages) to list image
 versions, and optionally prunes untagged ones older than a given
 number of days. :broom:
+
+The [`prune_images.yaml`](.github/workflows/prune_images.yaml)
+workflow uses this script to clean up once per month.
