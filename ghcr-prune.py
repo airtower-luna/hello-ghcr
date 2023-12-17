@@ -56,32 +56,43 @@ if __name__ == "__main__":
                       'Accept': github_api_accept,
                       'X-GitHub-Api-Version': github_api_version})
 
-    r = s.get(f'https://api.github.com/user/packages/'
-              f'container/{args.container}/versions')
-    versions = r.json()
-    if args.verbose:
-        reset = datetime.fromtimestamp(int(r.headers["x-ratelimit-reset"]))
-        print(f'{r.headers["x-ratelimit-remaining"]} requests remaining '
-              f'until {reset}')
-        print(versions)
-
     del_before = datetime.now().astimezone() - timedelta(days=args.prune_age) \
         if args.prune_age is not None else None
     if del_before:
         print(f'Pruning images created before {del_before}')
 
-    for v in versions:
-        created = datetime.fromisoformat(v['created_at'])
-        metadata = v["metadata"]["container"]
-        print(f'{v["id"]}\t{v["name"]}\t{created}\t{metadata["tags"]}')
+    list_url: str | None = 'https://api.github.com/user/packages/' \
+        f'container/{args.container}/versions'
 
-        # prune old untagged images if requested
-        if del_before is not None and created < del_before \
-           and len(metadata['tags']) == 0:
-            if args.dry_run:
-                print(f'would delete {v["id"]}')
-            else:
-                r = s.delete(f'https://api.github.com/user/packages/'
-                             f'container/{args.container}/versions/{v["id"]}')
-                r.raise_for_status()
-                print(f'deleted {v["id"]}')
+    while list_url is not None:
+        r = s.get(list_url)
+        if 'link' in r.headers and 'next' in r.links:
+            list_url = r.links['next']['url']
+            if args.verbose:
+                print(f'More result pages, next is <{list_url}>')
+        else:
+            list_url = None
+
+        versions = r.json()
+        if args.verbose:
+            reset = datetime.fromtimestamp(int(r.headers["x-ratelimit-reset"]))
+            print(f'{r.headers["x-ratelimit-remaining"]} requests remaining '
+                  f'until {reset}')
+            print(versions)
+
+        for v in versions:
+            created = datetime.fromisoformat(v['created_at'])
+            metadata = v["metadata"]["container"]
+            print(f'{v["id"]}\t{v["name"]}\t{created}\t{metadata["tags"]}')
+
+            # prune old untagged images if requested
+            if del_before is not None and created < del_before \
+               and len(metadata['tags']) == 0:
+                if args.dry_run:
+                    print(f'would delete {v["id"]}')
+                else:
+                    r = s.delete(
+                        'https://api.github.com/user/packages/'
+                        f'container/{args.container}/versions/{v["id"]}')
+                    r.raise_for_status()
+                    print(f'deleted {v["id"]}')
