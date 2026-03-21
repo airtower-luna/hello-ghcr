@@ -2,6 +2,13 @@
 # (https://github.com/aquasecurity/trivy-action).
 name: Scan existing images
 on:
+  workflow_run:
+    workflows:
+      - Meow Container
+    types:
+      - completed
+    branches:
+      - main
   schedule:
     - cron: '10 3 * * SAT'
   workflow_dispatch:
