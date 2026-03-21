@@ -1,5 +1,14 @@
+# Scan "latest" and "beta" images for vulnerabilities using Trivy
+# (https://github.com/aquasecurity/trivy-action).
 name: Scan existing images
 on:
+  workflow_run:
+    workflows:
+      - Meow Container
+    types:
+      - completed
+    branches:
+      - main
   schedule:
     - cron: '10 3 * * SAT'
   workflow_dispatch:
@@ -18,10 +27,9 @@ jobs:
           - 'latest'
           - 'beta'
     name: ${{ matrix.label }}
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Docker login
-        if: ${{ env.TAGS }}
         env:
           GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: >
@@ -41,7 +49,7 @@ jobs:
         with:
           ref: ${{ env.IMAGE_REF }}
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@0.35.0
+        uses: aquasecurity/trivy-action@v0.35.0
         with:
           image-ref: '${{ env.IMAGE }}'
           format: 'sarif'
