@@ -11,11 +11,6 @@ scripts here are supposed to do:
 * Choose suitable tags for the image (see
   [`tag-from-ref.py`](./tag-from-ref.py))
 
-* Scan the image for vulnerabilities using
-  [Trivy](https://github.com/aquasecurity/trivy-action). The scan also
-  runs regularly for the `beta` and `latest` tags in the
-  [`scan_images.yaml`](.github/workflows/scan_images.yaml) workflow.
-
 * If the image should be tagged, do that and push to GHCR.
 
 If you run the resulting image it'll meow at you, you can even give a

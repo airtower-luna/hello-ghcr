@@ -1,3 +1,5 @@
+# Scan "latest" and "beta" images for vulnerabilities using Trivy
+# (https://github.com/aquasecurity/trivy-action).
 name: Scan existing images
 on:
   schedule:
@@ -41,7 +43,7 @@ jobs:
         with:
           ref: ${{ env.IMAGE_REF }}
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@0.35.0
+        uses: aquasecurity/trivy-action@v0.35.0
         with:
           image-ref: '${{ env.IMAGE }}'
           format: 'sarif'
