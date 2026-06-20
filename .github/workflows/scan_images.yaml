@@ -45,7 +45,7 @@ jobs:
       - name: Read image revision
         run: |
           echo "IMAGE_REF=$(docker image inspect --format '{{ index .Config.Labels "org.opencontainers.image.revision" }}' ${IMAGE})" >>${GITHUB_ENV}
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           ref: ${{ env.IMAGE_REF }}
       - name: Run Trivy vulnerability scanner
